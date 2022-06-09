@@ -1,3 +1,4 @@
+#this is a playbook to install and coficur apache in the server
 - hosts: node3
   become: true
   tasks:
