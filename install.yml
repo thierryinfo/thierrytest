@@ -1,0 +1,22 @@
+- hosts: web
+  become: yes
+  vars: 
+        pkg_name: httpd
+        src_name: httpd
+  tasks:
+          - name: Install {{pkg_name}}
+            yum:
+                   name: "{{pkg_name}}"
+                   state: latest 
+
+          - name: Start and enable service {{src_name}}
+            service:
+                   name: "{{src_name}}"
+                   state: started
+                   enabled: yes
+
+ #- hosts: all
+ #  become: yes
+ #  tasks:
+ #         - name: Install tree
+ #           yum: name=tree state=present
