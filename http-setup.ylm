@@ -1,0 +1,42 @@
+## This is to build a website
+- hosts: all
+  become: true
+  tasks:
+   - name: Install HTTPD
+     ansible.builtin.yum:
+        name: httpd
+        state: latest
+     when: ansible_nodename == 'node2'
+
+   - name: Enforce SELinux
+     ansible.posix.selinux:
+        policy: targeted
+        state: enforcing
+     when: ansible_nodename == 'node2'
+
+   - name: Start HTTPD
+     ansible.builtin.service:
+       name: httpd
+       state: started
+       enabled: yes
+     when: ansible_nodename == 'node2'
+
+   - name: Allow on FW
+     ansible.posix.firewalld:
+       service: http
+       permanent: true
+       state: enabled
+       immediate: true
+     when: ansible_nodename == 'node2'
+
+   - name: Set web doc
+     file:
+       path: /var/www/html/index.html
+       state: touch
+     when: ansible_nodename == 'node2'
+
+   - name: Append to file
+     ansible.builtin.copy:
+       content: 'Website deployed by Ansible'
+       dest: /var/www/html/index.html
+     when: ansible_nodename == 'node2'
